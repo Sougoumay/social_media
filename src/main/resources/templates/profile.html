@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil - Forum Social</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="container">
+    <div class="card">
+        <div style="text-align: center;">
+            <div class="friend-avatar" style="font-size: 3rem; width: 120px; height: 120px; margin: 0 auto 1rem;">
+                <span th:text="${#strings.substring(user.username, 0, 1).toUpperCase()}"></span>
+            </div>
+            <h1 th:text="${user.username}"></h1>
+            <p th:text="${user.email}"></p>
+            <p style="margin-top: 1rem;" th:if="${user.bio}" th:text="${user.bio}"></p>
+            <p style="color: #718096; margin-top: 1rem;">
+                Membre depuis le <span th:text="${#temporals.format(user.createdAt, 'dd/MM/yyyy')}"></span>
+            </p>
+        </div>
+
+        <div style="margin-top: 2rem; text-align: center;">
+            <div th:if="${isOwnProfile}">
+                <form th:action="@{/users/profile/update}" method="post" style="margin-top: 2rem;">
+                    <div class="form-group">
+                        <label class="form-label">Bio</label>
+                        <textarea name="bio" class="form-control" th:text="${user.bio}"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Mettre à jour le profil</button>
+                </form>
+            </div>
+
+            <div th:if="${!isOwnProfile}">
+                <div th:if="${isFriend}">
+                    <a th:href="@{/messages/conversation/{id}(id=${user.id})}" class="btn btn-primary">
+                        Envoyer un message
+                    </a>
+                </div>
+                <div th:if="${!isFriend}">
+                    <form th:action="@{/friends/request/{id}(id=${user.id})}" method="post">
+                        <button type="submit" class="btn btn-primary">Envoyer une demande d'ami</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

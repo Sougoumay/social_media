@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Messages - Forum Social</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="container">
+    <div class="card">
+        <h2 class="card-header">Conversations</h2>
+
+        <div th:if="${conversationPartners.isEmpty()}" style="text-align: center; padding: 2rem;">
+            <p>Aucune conversation pour le moment.</p>
+            <p>Commencez à discuter avec vos amis !</p>
+        </div>
+
+        <div th:each="partner : ${conversationPartners}" class="message-card">
+            <div class="message-header">
+                <span class="message-sender" th:text="${partner.username}"></span>
+                <a th:href="@{/messages/conversation/{id}(id=${partner.id})}" class="btn btn-primary btn-sm">
+                    Voir la conversation
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

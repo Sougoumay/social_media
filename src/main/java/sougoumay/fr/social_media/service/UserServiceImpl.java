@@ -66,7 +66,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> searchUsers(String query, Long currentUserId) {
-        return null;
+        return userRepository.searchUsers(query, currentUserId);
     }
 
     @Override

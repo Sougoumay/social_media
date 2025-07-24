@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.*;
 import sougoumay.fr.social_media.entity.User;
 import sougoumay.fr.social_media.service.UserService;
 
+import java.util.List;
+import java.util.Set;
+
 @Controller
 @RequestMapping("/users")
 public class UserController {
@@ -22,9 +25,11 @@ public class UserController {
                               @AuthenticationPrincipal User currentUser,
                               Model model) {
         User user = userService.findByUsername(username);
+        Set<User> currentUserFriends = userService.findByIdWithFriends(currentUser.getId()).getFriends();
+
         model.addAttribute("user", user);
         model.addAttribute("isOwnProfile", user.getId().equals(currentUser.getId()));
-        model.addAttribute("isFriend", currentUser.getFriends().contains(user));
+        model.addAttribute("isFriend", currentUserFriends.contains(user));
         return "profile";
     }
 

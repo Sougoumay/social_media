@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amis - Forum Social</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="container">
+    <!-- Recherche d'utilisateurs -->
+    <div class="card">
+        <h2 class="card-header">Rechercher des utilisateurs</h2>
+        <form th:action="@{/users/search}" method="get">
+            <div class="form-group">
+                <input type="text" name="query" class="form-control"
+                       placeholder="Rechercher par nom d'utilisateur..." required>
+            </div>
+            <button type="submit" class="btn btn-primary">Rechercher</button>
+        </form>
+    </div>
+
+    <!-- Demandes d'amis en attente -->
+    <div class="card" th:if="${!pendingRequests.isEmpty()}">
+        <h2 class="card-header">Demandes d'amis reçues</h2>
+        <div class="friends-grid">
+            <div th:each="request : ${pendingRequests}" class="friend-card">
+                <div class="friend-avatar" th:text="${#strings.substring(request.sender.username, 0, 1).toUpperCase()}"></div>
+                <h3><a th:href="@{/users/profile/{username}(username=${request.sender.username})}"
+                       th:text="${request.sender.username}"></a></h3>
+                <p style="margin: 1rem 0;">
+                <form th:action="@{/friends/accept/{id}(id=${request.id})}" method="post" style="display: inline;">
+                    <button type="submit" class="btn btn-success btn-sm">Accepter</button>
+                </form>
+                <form th:action="@{/friends/decline/{id}(id=${request.id})}" method="post" style="display: inline;">
+                    <button type="submit" class="btn btn-danger btn-sm">Refuser</button>
+                </form>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Liste des amis -->
+    <div class="card">
+        <h2 class="card-header">Mes amis</h2>
+        <div th:if="${friends.isEmpty()}" style="text-align: center; padding: 2rem;">
+            <p>Vous n'avez pas encore d'amis.</p>
+            <p>Recherchez des utilisateurs pour envoyer des demandes d'amis !</p>
+        </div>
+        <div class="friends-grid">
+            <div th:each="friend : ${friends}" class="friend-card">
+                <div class="friend-avatar" th:text="${#strings.substring(friend.username, 0, 1).toUpperCase()}"></div>
+                <h3><a th:href="@{/users/profile/{username}(username=${friend.username})}"
+                       th:text="${friend.username}"></a></h3>
+                <a th:href="@{/messages/conversation/{id}(id=${friend.id})}" class="btn btn-primary btn-sm">
+                    Envoyer un message
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

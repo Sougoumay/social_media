@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Résultats de recherche - Forum Social</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="container">
+    <div class="card">
+        <h2 class="card-header">
+            Résultats de recherche pour "<span th:text="${query}"></span>"
+        </h2>
+
+        <div th:if="${users.isEmpty()}" style="text-align: center; padding: 2rem;">
+            <p>Aucun utilisateur trouvé.</p>
+        </div>
+
+        <div class="friends-grid">
+            <div th:each="user : ${users}" class="friend-card">
+                <div class="friend-avatar" th:text="${#strings.substring(user.username, 0, 1).toUpperCase()}"></div>
+                <h3><a th:href="@{/users/profile/{username}(username=${user.username})}"
+                       th:text="${user.username}"></a></h3>
+                <p th:text="${user.email}"></p>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
