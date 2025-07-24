@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+<nav class="navbar" th:fragment="header">
+    <div class="navbar-container">
+        <a href="/home" class="navbar-brand">Forum Social</a>
+        <ul class="navbar-nav">
+            <li><a th:href="@{/home}">Accueil</a></li>
+            <li><a th:href="@{/friends}">Amis</a></li>
+            <li>
+                <a th:href="@{/messages}">
+                    Messages
+                    <span class="badge" th:if="${unreadMessages > 0}" th:text="${unreadMessages}"></span>
+                </a>
+            </li>
+            <li>
+                <a th:href="@{/users/profile/{username}(username=${#authentication.name})}">
+                    Mon Profil
+                </a>
+            </li>
+            <li>
+                <form th:action="@{/logout}" method="post" style="display: inline;">
+                    <button type="submit" class="btn btn-secondary btn-sm">Déconnexion</button>
+                </form>
+            </li>
+        </ul>
+    </div>
+</nav>
+</body>
+</html>

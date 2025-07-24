@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accueil - Forum Social</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+
+<div class="container">
+    <div class="card">
+        <h2 class="card-header">Créer une publication</h2>
+        <form th:action="@{/posts/create}" method="post">
+            <div class="form-group">
+                <textarea name="content" class="form-control" placeholder="Quoi de neuf ?" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Publier</button>
+        </form>
+    </div>
+
+    <div class="card">
+        <h2 class="card-header">Fil d'actualité</h2>
+
+        <div th:if="${posts.isEmpty()}" style="text-align: center; padding: 2rem;">
+            <p>Aucune publication pour le moment.</p>
+            <p>Ajoutez des amis pour voir leurs publications !</p>
+        </div>
+
+        <div th:each="post : ${posts}" class="post-card">
+            <div class="post-header">
+                <a th:href="@{/users/profile/{username}(username=${post.author.username})}"
+                   class="post-author" th:text="${post.author.username}"></a>
+                <span class="post-time" th:text="${#temporals.format(post.createdAt, 'dd/MM/yyyy HH:mm')}"></span>
+            </div>
+            <div class="post-content" th:text="${post.content}"></div>
+            <div th:if="${post.author.username == #authentication.name}" style="margin-top: 1rem;">
+                <form th:action="@{/posts/{id}/delete(id=${post.id})}" method="post" style="display: inline;">
+                    <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

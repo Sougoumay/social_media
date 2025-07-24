@@ -16,9 +16,11 @@ import sougoumay.fr.social_media.service.UserService;
 public class SecurityConfig {
 
     private final UserService userService;
+    private final EncoderConfig encoderConfig;
 
-    public SecurityConfig(UserService userService) {
+    public SecurityConfig(UserService userService, EncoderConfig encoderConfig) {
         this.userService = userService;
+        this.encoderConfig = encoderConfig;
     }
 
     @Bean
@@ -42,15 +44,10 @@ public class SecurityConfig {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
         AuthenticationManagerBuilder authBuilder =
                 http.getSharedObject(AuthenticationManagerBuilder.class);
-        authBuilder.userDetailsService(userService).passwordEncoder(passwordEncoder());
+        authBuilder.userDetailsService(userService).passwordEncoder(encoderConfig.passwordEncoder());
         return authBuilder.build();
     }
 }
