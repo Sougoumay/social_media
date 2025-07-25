@@ -20,6 +20,7 @@ public class FriendController {
         this.userService = userService;
     }
 
+
     @GetMapping
     public String friendsList(@AuthenticationPrincipal User currentUser, Model model) {
         User userWithFriends = userService.findByIdWithFriends(currentUser.getId());

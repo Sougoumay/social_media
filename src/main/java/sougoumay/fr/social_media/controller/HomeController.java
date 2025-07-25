@@ -24,7 +24,7 @@ public class HomeController {
     public String home(@AuthenticationPrincipal User currentUser, Model model) {
         model.addAttribute("posts", postService.getFriendsPosts(currentUser.getId()));
         model.addAttribute("unreadMessages", messageService.getUnreadCount(currentUser.getId()));
-        return "home";
+        return "home-view";
     }
 
     @PostMapping("/posts/create")

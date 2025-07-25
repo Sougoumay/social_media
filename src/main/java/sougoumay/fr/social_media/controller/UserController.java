@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import sougoumay.fr.social_media.entity.User;
 import sougoumay.fr.social_media.service.UserService;
 
-import java.util.List;
 import java.util.Set;
 
 @Controller

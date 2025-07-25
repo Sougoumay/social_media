@@ -12,6 +12,7 @@ import sougoumay.fr.social_media.service.UserService;
 @RequestMapping("/messages")
 public class MessageController {
 
+
     private final MessageService messageService;
     private final UserService userService;
 
