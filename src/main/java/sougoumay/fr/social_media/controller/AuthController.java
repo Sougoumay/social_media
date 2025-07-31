@@ -1,6 +1,7 @@
 package sougoumay.fr.social_media.controller;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Email;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -8,7 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import sougoumay.fr.social_media.service.UserService;
-import sougoumay.fr.social_media.service.UserServiceImpl;
 
 @Controller
 public class AuthController {
@@ -26,20 +26,20 @@ public class AuthController {
 
     @GetMapping("/login")
     public String loginPage() {
-        return "login";
+        return "login-view";
     }
 
     @GetMapping("/register")
     public String registerPage(Model model) {
         model.addAttribute("user", new RegisterForm());
-        return "register";
+        return "register-view";
     }
 
     @PostMapping("/register")
     public String register(@Valid @ModelAttribute("user") RegisterForm form,
                            BindingResult result, Model model) {
         if (result.hasErrors()) {
-            return "register";
+            return "register-view";
         }
 
         try {
@@ -47,17 +47,16 @@ public class AuthController {
             return "redirect:/login?registered";
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());
-            return "register";
+            return "register-view";
         }
     }
 
-    // Inner class for form binding
     public static class RegisterForm {
         private String username;
+        @Email
         private String email;
         private String password;
 
-        // getters and setters
         public String getUsername() { return username; }
         public void setUsername(String username) { this.username = username; }
         public String getEmail() { return email; }
