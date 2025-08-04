@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: sm-deploy-label
+  name: sm-deploy-name
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: social-media
+  template:
+    metadata:
+      labels:
+        app: social-media
+      name: sm-pod-name
+    spec:
+      containers:
+        - name: sm-container-name
+          image: sm-image
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  key: HOSTNAME
+                  name: sm-app-config-map
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: sm-app-config-map
+                  key: PORT
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  key: MYSQL_USER
+                  name: sm-app-secret
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: MYSQL_PASSWORD
+                  name: sm-app-secret
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  key: MYSQL_DATABASE
+                  name: sm-app-secret

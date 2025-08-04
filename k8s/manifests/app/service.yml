@@ -1,0 +1,10 @@
+apiVersion : v1
+kind: Service
+metadata:
+  name: sm-app-service
+spec:
+  selector:
+    app: social-media
+  ports:
+    - port: 8080
+      targetPort: 8080

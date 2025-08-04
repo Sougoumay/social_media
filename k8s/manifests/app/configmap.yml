@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sm-app-config-map
+data:
+  HOSTNAME: "social_media"
+  PORT: "3306"
