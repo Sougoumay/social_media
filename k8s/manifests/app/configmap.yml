@@ -3,5 +3,5 @@ kind: ConfigMap
 metadata:
   name: sm-app-config-map
 data:
-  HOSTNAME: "social_media"
+  HOSTNAME: "sm-db-service"
   PORT: "3306"
