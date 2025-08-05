@@ -4,7 +4,7 @@ FROM eclipse-temurin:17-jdk AS build
 # Définir le répertoire de travail
 WORKDIR /app
 
-# Installer Maven (si nécessaire)
+# Instaler Maven
 RUN apt-get update && apt-get install -y maven
 
 # Copier les fichiers du projet dans l'image

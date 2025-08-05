@@ -1,6 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  labels:
+    db: sm-db-deploy
   name: sm-db-deploy
 spec:
   selector:
@@ -15,6 +17,7 @@ spec:
       containers:
         - name: sm-db-container
           image: mysql:8.0
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3306
           env:
@@ -35,9 +38,9 @@ spec:
                   name: sm-app-secret
             - name: MYSQL_DATABASE
               valueFrom:
-                secretKeyRef:
+                configMapKeyRef:
                   key: MYSQL_DATABASE
-                  name: sm-app-secret
+                  name: sm-db-config-map
           volumeMounts:
             - mountPath: /var/lib/mysql
               name: mysql-storage

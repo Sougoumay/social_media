@@ -3,8 +3,6 @@ kind: Kustomization
 
 namePrefix: kustomize-
 
-namespace: social-media
-
 resources:
   - manifests/secret.yml
   - manifests/app/

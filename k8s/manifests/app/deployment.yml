@@ -2,8 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: sm-deploy-label
-  name: sm-deploy-name
+    app: sm-app-deploy
+  name: sm-app-deploy
 spec:
   replicas: 3
   selector:
@@ -17,7 +17,8 @@ spec:
     spec:
       containers:
         - name: sm-app-container
-          image: sm-image
+          image: sm-image:latest
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
           env:
@@ -31,6 +32,11 @@ spec:
                 configMapKeyRef:
                   name: sm-app-config-map
                   key: PORT
+            - name: DB_NAME
+              valueFrom:
+                configMapKeyRef:
+                  key: DATABASE
+                  name: sm-app-config-map
             - name: DB_USER
               valueFrom:
                 secretKeyRef:
@@ -40,11 +46,6 @@ spec:
               valueFrom:
                 secretKeyRef:
                   key: MYSQL_PASSWORD
-                  name: sm-app-secret
-            - name: DB_NAME
-              valueFrom:
-                secretKeyRef:
-                  key: MYSQL_DATABASE
                   name: sm-app-secret
             - name: SPRING_PROFILE_ACTIVE
               value: docker
