@@ -24,7 +24,8 @@ Les étapes à suivres pour lancer l'application sous kubernetes (minikube en lo
         - port: 8080
           targetPort: 8080
   ```
-4. minikube tunnel
+4. minikube tunnel 
+   ![img_2.png](img_2.png)
 5. kubectl get svc kustomize-sm-app-service
 6. $ kubectl get svc kustomize-sm-app-service
    NAME                       TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
