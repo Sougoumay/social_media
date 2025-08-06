@@ -7,3 +7,4 @@ resources:
   - manifests/secret.yml
   - manifests/app/
   - manifests/mysql/
+  - ingress/ingress.yml
