@@ -5,7 +5,6 @@ metadata:
     app: sm-app-deploy
   name: sm-app-deploy
 spec:
-  replicas: 3
   selector:
     matchLabels:
       app: social-media
@@ -15,9 +14,13 @@ spec:
         app: social-media
       name: sm-app-pod-name
     spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        fsGroup: 1000
       containers:
         - name: sm-app-container
-          image: sm-image:latest
+          image: sm-image:1.0.2
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
@@ -48,4 +51,37 @@ spec:
                   key: MYSQL_PASSWORD
                   name: sm-app-secret
             - name: SPRING_PROFILE_ACTIVE
-              value: docker
+              valueFrom:
+                configMapKeyRef:
+                  key: SPRING_PROFILE_ACTIVE
+                  name: sm-app-config-map
+          # Health checks
+          livenessProbe:
+            httpGet:
+              port: 8080
+              path: /actuator/health/liveness
+            initialDelaySeconds: 60   # prévention du temps de démerrage de spring
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              port: 8080
+              path: /actuator/health/readiness
+            initialDelaySeconds: 30
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "500m"
+          securityContext:
+            allowPrivilegeEscalation: false # Empêcher à un attaquant de pouvoir avoir plus de privilège que l'utilisateur spring
+#            readOnlyRootFilesystem: true # à voir et comprendre plus en détail
+#            capabilities:
+#              drop:
+#                - ALL

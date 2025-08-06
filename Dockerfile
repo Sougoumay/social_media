@@ -14,13 +14,19 @@ COPY . .
 RUN mvn clean package -DskipTests
 
 # Étape 2 : Exécution
-FROM eclipse-temurin:17-jdk
+FROM eclipse-temurin:17-jre-slim
+
+# Créer un utilisateur et groupe non-root
+RUN groupadd -r spring && useradd -r -g spring -u 1000 spring
 
 # Définir le répertoire de travail
 WORKDIR /app
 
-# Copier le fichier JAR depuis l'étape de build
-COPY --from=build /app/target/*.jar app.jar
+# Copier le fichier JAR depuis l'étape de build avec les bonnes permissions
+COPY --from=build --chown=spring:spring /app/target/*.jar app.jar
+
+# Passer à l'utilisateur non-root
+USER spring:spring
 
 # Exposer le port de l'application
 EXPOSE 8080

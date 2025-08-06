@@ -1,0 +1,27 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: sm-app-net-pol
+spec:
+  podSelector:
+    matchLabels:
+      app: social-media
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+    - from:
+      - podSelector:
+         matchLabels:
+           net: social-media
+      ports:
+        - protocol: TCP
+          port: 8080
+  egress:
+    - to:
+       - podSelector:
+          matchLabels:
+           db: social-media
+      ports:
+        - protocol: TCP
+          port: 3306
