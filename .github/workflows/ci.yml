@@ -45,6 +45,6 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            sudo mv /home/ubuntu/*.jar /opt/springapp/app.jar
+            sudo mv /home/ubuntu/target/*.jar /opt/springapp/app.jar
             sudo systemctl daemon-reload
             sudo systemctl restart springapp
