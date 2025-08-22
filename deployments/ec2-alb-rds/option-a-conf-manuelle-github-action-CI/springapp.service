@@ -1,0 +1,15 @@
+[Unit]
+Description=Spring Boot Social Media App
+After=network.target
+
+[Service]
+User=ubuntu
+WorkingDirectory=/opt/springapp
+EnvironmentFile=/etc/springapp/springapp.env
+ExecStart=/usr/bin/java -jar /opt/springapp/app.jar
+SuccessExitStatus=143
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
