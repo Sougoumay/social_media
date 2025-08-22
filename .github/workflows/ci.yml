@@ -36,16 +36,15 @@ jobs:
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           source: "target/*.jar"
-          target: "/opt/springapp/app.jar"
+          target: "/home/ubuntu/"
 
-      - name : Restart Spring Boot service
+      - name : Move JAR to /opt/springapp and restart service
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
+            sudo mv /home/ubuntu/*.jar /opt/springapp/app.jar
             sudo systemctl daemon-reload
             sudo systemctl restart springapp
-
-
