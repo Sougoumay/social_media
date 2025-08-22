@@ -20,11 +20,14 @@ jobs:
           distribution: 'temurin'
           architecture: 'x64'
 
+      - name: Install Maven
+        run : sudo apt update && sudo apt install -y maven
+
       - name: Run the test with Maven
-        run: ./mvnw test
+        run: mvn test
 
       - name: Build with Maven
-        run: ./mvnw clean package -DskipTests
+        run: mvn clean package -DskipTests
 
       - name : Copy JAR to EC2
         uses: appleboy/scp-action@v1
