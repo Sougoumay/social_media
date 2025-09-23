@@ -113,7 +113,7 @@ resource "aws_security_group" "social_media_EC2_SG" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = [aws_security_group.social_media_ec2_bastion_SG.id]
+    security_groups = [aws_security_group.social_media_ec2_bastion_SG.id]
   }
 
   # Outbound rules
