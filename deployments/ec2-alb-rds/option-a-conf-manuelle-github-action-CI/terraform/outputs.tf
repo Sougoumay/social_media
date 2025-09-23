@@ -52,3 +52,28 @@ output "availability_zones" {
   description = "Availability Zones used in the deployment"
 }
 
+# L'ID de l'instance
+output "ec2_instance_id" {
+  value = aws_instance.social_media_ec2.id
+}
+
+# L'adresse IP privée
+output "ec2_private_ip" {
+  value = aws_instance.social_media_ec2.private_ip
+}
+
+# L'adresse IP publique lorsqu'on met l'instance dans un subnet public avec un IGW et "map_public_ip_on_launch = true")
+output "ec2_public_ip" {
+  value = aws_instance.social_media_ec2.public_ip
+}
+
+# Le DNS public (pratique pour se connecter via SSH ou tester HTTP/HTTPS)
+output "ec2_public_dns" {
+  value = aws_instance.social_media_ec2.public_dns
+}
+
+# L'AZ (utile pour savoir où l'instance est lancée)
+output "ec2_availability_zone" {
+  value = aws_instance.social_media_ec2.availability_zone
+}
+
