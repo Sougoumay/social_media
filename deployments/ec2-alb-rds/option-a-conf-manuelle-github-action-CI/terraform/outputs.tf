@@ -93,7 +93,7 @@ output "bastion_ec2_public_dns" {
 }
 
 # L'AZ (utile pour savoir où l'instance est lancée)
-output "ec2_availability_zone" {
+output "bastion_availability_zone" {
   value = aws_instance.social_media_ec2_bastion.availability_zone
 }
 

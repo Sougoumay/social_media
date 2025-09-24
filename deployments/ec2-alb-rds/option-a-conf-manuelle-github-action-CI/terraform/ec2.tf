@@ -31,7 +31,7 @@ resource "aws_instance" "social_media_ec2" {
   instance_type = "t2.micro"
   subnet_id     = aws_subnet.private_subnet_1.id
   vpc_security_group_ids = [aws_security_group.social_media_EC2_SG.id]
-  key_name = data.aws_key_pair.socia_media_ec2_key_pair.key_name
+  key_name = aws_key_pair.socia_media_ec2_key_pair.key_name
 
   tags = {
     Name = "ec2-instance"
@@ -44,7 +44,7 @@ resource "aws_instance" "social_media_ec2_bastion" {
   instance_type = "t2.micro"
   subnet_id     = aws_subnet.public_subnet_1.id
   vpc_security_group_ids = [aws_security_group.social_media_ec2_bastion_SG.id]
-  key_name = data.aws_key_pair.socia_media_ec2_key_pair.key_name
+  key_name = aws_key_pair.socia_media_ec2_key_pair.key_name
 
   tags = {
     Name = "ec2-instance-bastion"
