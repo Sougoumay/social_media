@@ -97,3 +97,46 @@ output "ec2_availability_zone" {
   value = aws_instance.social_media_ec2_bastion.availability_zone
 }
 
+# Outputs du Load Balancer
+output "alb_arn" {
+  description = "ARN de l'Application Load Balancer"
+  value       = aws_lb.social_media_application_load_balancer.arn
+}
+
+output "alb_dns_name" {
+  description = "DNS name de l'Application Load Balancer"
+  value       = aws_lb.social_media_application_load_balancer.dns_name
+}
+
+output "alb_zone_id" {
+  description = "Zone ID pour le Load Balancer (utile pour Route53)"
+  value       = aws_lb.social_media_application_load_balancer.zone_id
+}
+
+output "alb_security_groups" {
+  description = "IDs des Security Groups associés au ALB"
+  value       = aws_lb.social_media_application_load_balancer.security_groups
+}
+
+output "alb_subnets" {
+  description = "Subnets publics utilisés par le ALB"
+  value       = aws_lb.social_media_application_load_balancer.subnets
+}
+
+# Outputs du Target Group
+output "target_group_arn" {
+  description = "ARN du Target Group associé au ALB"
+  value       = aws_lb_target_group.social_media_target_group.arn
+}
+
+output "target_group_name" {
+  description = "Nom du Target Group"
+  value       = aws_lb_target_group.social_media_target_group.name
+}
+
+output "target_group_health_check_path" {
+  description = "Chemin configuré pour le health check du Target Group"
+  value       = aws_lb_target_group.social_media_target_group.health_check[0].path
+}
+
+
