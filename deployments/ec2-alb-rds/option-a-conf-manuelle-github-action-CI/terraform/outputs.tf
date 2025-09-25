@@ -139,4 +139,22 @@ output "target_group_health_check_path" {
   value       = aws_lb_target_group.social_media_target_group.health_check[0].path
 }
 
+output "rds_endpoint" {
+  description = "RDS endpoint to connect to the database"
+  value       = aws_db_instance.social_media_rds.endpoint
+}
 
+output "rds_port" {
+  description = "Port of the RDS instance"
+  value       = aws_db_instance.social_media_rds.port
+}
+
+output "rds_username" {
+  description = "Master username for the RDS instance"
+  value       = aws_db_instance.social_media_rds.username
+}
+
+output "rds_name" {
+  description = "Database name created in RDS"
+  value       = aws_db_instance.social_media_rds.identifier
+}

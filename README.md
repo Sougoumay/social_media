@@ -19,7 +19,7 @@ Une application de réseau social développée avec Spring Boot permettant aux u
 - **Frontend**: Thymeleaf, HTML5, CSS3
 - **Base de données**: H2 (développement), MySQL (production)
 - **Build**: Maven
-- **Déploiement**: Docker, Minikube en local, EKS pour l'environnement de production
+- **Déploiement**: Docker, Minikube en local, Environnement de production (EC2 + ALB + RDS, ECS (Fargate) + RDS, EKS (self-managed, puis auto mode) + RDS, Elastic Beanstalk (single container ou jar Spring Boot) + RDS)
 
 ## Installation locale
 

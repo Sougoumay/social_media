@@ -88,12 +88,12 @@ resource "aws_security_group" "social_media_ec2_bastion_SG" {
 ### EC2 Instance Security Group ###
 resource "aws_security_group" "social_media_EC2_SG" {
   name        = "social-media-ec2-sg"
-  description = "Allow inbound HTTP/HTTPS traffic from ALB' SG"
+  description = "Allow inbound HTTP/HTTPS traffic from SG of the ALB"
   vpc_id      = aws_vpc.main_social_media_vpc.id
 
   # Inbound rules
   ingress {
-    description = "Allow HTTP from ALB' SG"
+    description = "Allow HTTP from SG of the ALB"
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
@@ -101,7 +101,7 @@ resource "aws_security_group" "social_media_EC2_SG" {
   }
 
   ingress {
-    description = "Allow HTTPS from ALB' SG"
+    description = "Allow HTTPS from SG of the ALB"
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
@@ -136,12 +136,12 @@ resource "aws_security_group" "social_media_EC2_SG" {
 ### RDS Instance Security Group ###
 resource "aws_security_group" "social_media_RDS_SG" {
   name        = "social-media-rds-sg"
-  description = "Allow traffic from EC2' SG to database"
+  description = "Allow traffic from SG of the EC2 to database"
   vpc_id      = aws_vpc.main_social_media_vpc.id
 
   # Inbound rules
   ingress {
-    description = "Allow traffic from EC2' SG to database on port 3306"
+    description = "Allow traffic from SG of the EC2 to database on port 3306"
     from_port   = 3306
     to_port     = 3306
     protocol    = "tcp"

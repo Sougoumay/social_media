@@ -37,7 +37,7 @@ resource "aws_lb" "social_media_application_load_balancer" {
   preserve_host_header = true
   ip_address_type = "ipv4"
 
-  enable_deletion_protection = true
+  enable_deletion_protection = false
 
   tags = {
     Name = "sm-app-lb"
