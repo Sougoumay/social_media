@@ -37,7 +37,8 @@ build/
 
 
 ### Terraform ###
-deployments/ec2-alb-rds/option-a-conf-manuelle-github-action-CI/terraform/.terraform
-deployments/ec2-alb-rds/option-a-conf-manuelle-github-action-CI/terraform/.terraform.lock.hcl
-deployments/ec2-alb-rds/option-a-conf-manuelle-github-action-CI/terraform/terraform.tfstate
-deployments/ec2-alb-rds/option-a-conf-manuelle-github-action-CI/terraform/terraform.tfstate.backup
+deployments/ec2-alb-rds/terraform/.terraform
+deployments/ec2-alb-rds/.terraform.lock.hcl
+deployments/ec2-alb-rds/terraform/terraform.tfstate
+deployments/ec2-alb-rds/terraform/terraform.tfstate.backup
+**/terraform.tfvars

@@ -55,35 +55,35 @@ resource "aws_vpc_security_group_egress_rule" "allow_all_traffic_ipv6" {
 }
 
 ### Bastion (EC2) Instance Security Group ###
-resource "aws_security_group" "social_media_ec2_bastion_SG" {
-  name        = "social-media-ec2-bastion-sg"
-  description = "Allow traffic from internet into the bastion instance"
-  vpc_id      = aws_vpc.main_social_media_vpc.id
+# resource "aws_security_group" "social_media_ec2_bastion_SG" {
+#   name        = "social-media-ec2-bastion-sg"
+#   description = "Allow traffic from internet into the bastion instance"
+#   vpc_id      = aws_vpc.main_social_media_vpc.id
 
-  # Inbound rules
-  ingress {
-    description = "Allow traffic from internet into the bastion instance with ssh"
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    cidr_blocks = ["176.177.55.131/32"]
-  }
+#   # Inbound rules
+#   ingress {
+#     description = "Allow traffic from internet into the bastion instance with ssh"
+#     from_port   = 22
+#     to_port     = 22
+#     protocol    = "tcp"
+#     cidr_blocks = ["176.177.55.131/32"]
+#   }
 
-  # Outbound rules
-  egress {
-    description = "Allow all outbound traffic"
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-    ipv6_cidr_blocks = ["::/0"]
-  }
+#   # Outbound rules
+#   egress {
+#     description = "Allow all outbound traffic"
+#     from_port   = 0
+#     to_port     = 0
+#     protocol    = "-1"
+#     cidr_blocks = ["0.0.0.0/0"]
+#     ipv6_cidr_blocks = ["::/0"]
+#   }
 
-  tags = {
-    Name    = "social-media-ec2-bastion-sg"
-    Project = "social-media"
-  }
-}
+#   tags = {
+#     Name    = "social-media-ec2-bastion-sg"
+#     Project = "social-media"
+#   }
+# }
 
 ### EC2 Instance Security Group ###
 resource "aws_security_group" "social_media_EC2_SG" {
@@ -108,13 +108,13 @@ resource "aws_security_group" "social_media_EC2_SG" {
     security_groups = [aws_security_group.social_media_ALB_SG.id]
   }
 
-  ingress {
-    description = "Allow SSL to use the server from the bastion ec2 instance"
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
-    security_groups = [aws_security_group.social_media_ec2_bastion_SG.id]
-  }
+  # ingress {
+  #   description = "Allow SSL to use the server from the bastion ec2 instance"
+  #   from_port   = 22
+  #   to_port     = 22
+  #   protocol    = "tcp"
+  #   security_groups = [aws_security_group.social_media_ec2_bastion_SG.id]
+  # }
 
   # Outbound rules
   egress {

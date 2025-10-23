@@ -48,3 +48,18 @@ variable "cidr_public_subnet_2" {
   type = string
 }
 
+variable "rds_db_name" {
+  description = "Le nom de la base de données"
+  type = string
+}
+
+variable "rds_db_user" {
+  description = "L'utilisateur principale de la base de donnée"
+  type = string
+}
+
+variable "rds_db_password" {
+  description = "Le mot de passe de la base de données"
+  type = string
+}
+
