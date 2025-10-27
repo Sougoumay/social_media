@@ -72,30 +72,30 @@ output "ec2_availability_zone" {
   value = aws_instance.social_media_ec2.availability_zone
 }
 
-# L'ID de l'instance bastion
-output "bastion_ec2_instance_id" {
-  value = aws_instance.social_media_ec2.id
-}
+# # L'ID de l'instance bastion
+# output "bastion_ec2_instance_id" {
+#   value = aws_instance.social_media_ec2.id
+# }
 
-# L'adresse IP privée du bastion
-output "bastion_ec2_private_ip" {
-  value = aws_instance.social_media_ec2.private_ip
-}
+# # L'adresse IP privée du bastion
+# output "bastion_ec2_private_ip" {
+#   value = aws_instance.social_media_ec2.private_ip
+# }
 
-# L'adresse IP publique du bastion qui a un IGW et "map_public_ip_on_launch = true")
-output "bastion_ec2_public_ip" {
-  value = aws_instance.social_media_ec2_bastion.public_ip
-}
+# # L'adresse IP publique du bastion qui a un IGW et "map_public_ip_on_launch = true")
+# output "bastion_ec2_public_ip" {
+#   value = aws_instance.social_media_ec2_bastion.public_ip
+# }
 
-# Le DNS public (pratique pour se connecter via SSH ou tester HTTP/HTTPS)
-output "bastion_ec2_public_dns" {
-  value = aws_instance.social_media_ec2_bastion.public_dns
-}
+# # Le DNS public (pratique pour se connecter via SSH ou tester HTTP/HTTPS)
+# output "bastion_ec2_public_dns" {
+#   value = aws_instance.social_media_ec2_bastion.public_dns
+# }
 
-# L'AZ (utile pour savoir où l'instance est lancée)
-output "bastion_availability_zone" {
-  value = aws_instance.social_media_ec2_bastion.availability_zone
-}
+# # L'AZ (utile pour savoir où l'instance est lancée)
+# output "bastion_availability_zone" {
+#   value = aws_instance.social_media_ec2_bastion.availability_zone
+# }
 
 # Outputs du Load Balancer
 output "alb_arn" {
