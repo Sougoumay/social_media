@@ -28,23 +28,3 @@ jobs:
 
      - name: Build with Maven
        run: mvn clean package -DskipTests
-
-     - name : Copy JAR to EC2
-       uses: appleboy/scp-action@v1
-       with:
-         host: ${{ secrets.EC2_HOST }}
-         username: ubuntu
-         key: ${{ secrets.EC2_SSH_KEY }}
-         source: "target/*.jar"
-         target: "/home/ubuntu/"
-
-     - name : Move JAR to /opt/springapp and restart service
-       uses: appleboy/ssh-action@v1
-       with:
-         host: ${{ secrets.EC2_HOST }}
-         username: ubuntu
-         key: ${{ secrets.EC2_SSH_KEY }}
-         script: |
-           sudo mv /home/ubuntu/target/*.jar /opt/springapp/app.jar
-           sudo systemctl daemon-reload
-           sudo systemctl restart springapp
