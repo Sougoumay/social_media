@@ -10,20 +10,20 @@ db_password="${db_password}"
 alb_domain="${alb_domain}"
 
 echo "===== Installation des dépendances ====="
-apt update && apt upgrade -y
-apt install -y git openjdk-17-jdk nginx
+sudo apt update && sudo apt upgrade -y
+sudo apt install -y git openjdk-17-jdk nginx
 
 echo "===== Clonage du repo ====="
 cd /opt
-git clone https://github.com/Sougoumay/social_media/tree/deploy-ec2-alb-rds
+git clone https://github.com/Sougoumay/social_media
 cd social_media
+git checkout deploy-ec2-alb-rds
 chmod +x mvnw
 ./mvnw -DskipTests package
 
-
 echo "===== Configuration Spring App ====="
-mkdir -p /etc/springapp
-cat <<EOF > /etc/springapp/springapp.env
+sudo mkdir -p /etc/springapp
+sudo tee /etc/springapp/springapp.env > /dev/null <<EOF
 DB_USER=${db_user}
 DB_PASSWORD=${db_password}
 DB_HOST=${db_endpoint}
@@ -33,10 +33,11 @@ SPRING_PROFILES_ACTIVE=prod
 SERVER_PORT=8080
 EOF
 
-mkdir -p /opt/springapp
-cp target/*.jar /opt/springapp/app.jar
+sudo mkdir -p /opt/springapp
+sudo cp /opt/social_media/target/*.jar /opt/springapp/app.jar
+sudo chown -R ubuntu:ubuntu /opt/springapp
 
-cat <<EOF > /etc/systemd/system/springapp.service
+sudo tee /etc/systemd/system/springapp.service > /dev/null <<EOF
 [Unit]
 Description=Spring Boot Social Media App
 After=network.target
@@ -54,12 +55,12 @@ RestartSec=10
 WantedBy=multi-user.target
 EOF
 
-systemctl daemon-reload
-systemctl enable springapp
-systemctl start springapp
+sudo systemctl daemon-reload
+sudo systemctl enable springapp
+sudo systemctl start springapp
 
 echo "===== Configuration Nginx ====="
-cat <<EOF > /etc/nginx/sites-available/socialmedia
+sudo tee /etc/nginx/sites-available/socialmedia > /dev/null <<EOF
 server {
     listen 80;
     server_name ${alb_domain};
@@ -74,9 +75,8 @@ server {
 }
 EOF
 
-rm -f /etc/nginx/sites-enabled/default
-ln -s /etc/nginx/sites-available/socialmedia /etc/nginx/sites-enabled/
-nginx -t
-systemctl restart nginx
+sudo rm -f /etc/nginx/sites-enabled/default
+sudo ln -s /etc/nginx/sites-available/socialmedia /etc/nginx/sites-enabled/
+sudo nginx -t && sudo systemctl reload nginx
 
-echo "Installation terminée"
+echo "===== Installation terminée avec succès ====="

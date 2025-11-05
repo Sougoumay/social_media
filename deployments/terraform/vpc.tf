@@ -138,3 +138,15 @@ resource "aws_route_table_association" "association_private_subnet_2" {
   subnet_id      = aws_subnet.private_subnet_1.id
   route_table_id = aws_route_table.social_media_private_route_table.id
 }
+
+resource "aws_vpc_endpoint" "social_media_s3_endpoint" {
+  vpc_id            = aws_vpc.main_social_media_vpc.id
+  service_name      = "com.amazonaws.${var.region}.s3"
+  vpc_endpoint_type = "Gateway"
+  route_table_ids   = [aws_route_table.social_media_private_route_table.id]
+
+  tags = {
+    Name = "sm_s3_endpoint"
+    Project = "social-media"
+  }
+}

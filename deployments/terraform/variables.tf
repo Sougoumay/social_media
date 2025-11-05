@@ -13,6 +13,11 @@ variable "region" {
   type = string
 }
 
+variable "account_id" {
+  description = "ID of the account to create resources"
+  type = string
+}
+
 variable "az1" {
   description = "Availability zone 1 in the region us-east-1"
   type = string
