@@ -13,6 +13,11 @@ variable "region" {
   type = string
 }
 
+variable "account_id" {
+  description = "ID of the account to create resources"
+  type = string
+}
+
 variable "az1" {
   description = "Availability zone 1 in the region us-east-1"
   type = string
@@ -45,6 +50,21 @@ variable "cidr_public_subnet_1" {
 
 variable "cidr_public_subnet_2" {
   description = "Le sous reseau public 2"
+  type = string
+}
+
+variable "rds_db_name" {
+  description = "Le nom de la base de données"
+  type = string
+}
+
+variable "rds_db_user" {
+  description = "L'utilisateur principale de la base de donnée"
+  type = string
+}
+
+variable "rds_db_password" {
+  description = "Le mot de passe de la base de données"
   type = string
 }
 

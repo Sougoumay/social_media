@@ -158,3 +158,47 @@ output "rds_name" {
   description = "Database name created in RDS"
   value       = aws_db_instance.social_media_rds.identifier
 }
+
+output "ec2_iam_role_name" {
+  value = aws_iam_role.sm_iam_role_ec2.name
+}
+
+output "ec2_iam_role_arn" {
+  value = aws_iam_role.sm_iam_role_ec2.arn
+}
+
+output "github_iam_role_name" {
+  value = aws_iam_role.github_role.name
+}
+
+output "github_iam_role_arn" {
+  value = aws_iam_role.github_role.arn
+}
+
+output "ec2_instance_profile_name" {
+  value = aws_iam_instance_profile.sm_instance_profile.name
+}
+
+output "ec2_instance_profile_arn" {
+  value = aws_iam_instance_profile.sm_instance_profile.arn
+}
+
+output "s3_bucket_name" {
+  value = aws_s3_bucket.social_media_s3_jar.bucket
+}
+
+output "s3_bucket_arn" {
+  value = aws_s3_bucket.social_media_s3_jar.arn
+}
+
+output "github_iam_policy_arn" {
+  value = aws_iam_policy.sm_github_iam_policy.arn
+}
+
+output "s3_bucket_policy_json" {
+  value = data.aws_iam_policy_document.sm_jar_bucket_policy_doc.json
+}
+
+
+
+
