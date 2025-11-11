@@ -6,7 +6,7 @@ on:
      - main
 
 env:
-  BUCKET_NAME : "sm_jar_bucket"
+  BUCKET_NAME : "sm-jar-bucket"
   AWS_REGION : "us-east-1"
 
 permissions:
