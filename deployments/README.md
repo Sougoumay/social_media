@@ -41,17 +41,25 @@ cd ..
 ```
 3. Configurer la connexion à la BDD
    - Créer le dossier pour les fichiers de configuration : 
-      `sudo mkdir -p /etc/springapp` 
+```bash  
+sudo mkdir -p /etc/springapp` 
+```
    - Créer le fichier d'environnement pour les secrets (springapp.env) :
-      `sudo nano /etc/springapp/springapp.env`
+```bash
+sudo nano /etc/springapp/springapp.env  
+```
    - Le contenu du fichier springapp.env est dans le fichier (springapp.env qui est à la même arborescence)
    - Créer le dossier de l'application et les droits Ubuntu pour l'execution de l'appli
-      `sudo mkdir -p /opt/springapp`
-      `sudo cp social_media/target/*.jar /opt/springapp/app.jar`
-      `sudo chown -R ubuntu:ubuntu /opt/springapp`
+```bash
+sudo mkdir -p /opt/springapp
+sudo cp social_media/target/*.jar /opt/springapp/app.jar
+sudo chown -R ubuntu:ubuntu /opt/springapp
+```
 4. Créer le service systemd
    - Créer le fichier /etc/systemd/system/springapp.service :
-      `sudo nano /etc/systemd/system/springapp.service`
+```bash
+sudo nano /etc/systemd/system/springapp.service
+```
    - Le contenu du fichier springapp.service est dans le fichier à la même arboresnce et avec le même nom
 6. Activer et démarrer le service
 ```bash
@@ -66,15 +74,19 @@ sudo systemctl enable nginx
 sudo systemctl start nginx
 ```
 8. Créer le fichier de configuration - son contenu est dans le fichier nginx.conf qui est à la même arboresence
-   `sudo nano /etc/nginx/sites-available/socialmedia`
+```bash
+sudo nano /etc/nginx/sites-available/socialmedia
+```
    
 10. Installer et configurer Nginx
-    `sudo apt update`
-    `sudo apt install -y nginx`
-    `sudo systemctl enable nginx`
-    `sudo systemctl start nginx`
-    `sudo nano /etc/nginx/sites-available/socialmedia`
-    Le contenu de socialmedia est dans le fichier `nginx.conf`
+```bash
+sudo apt update
+sudo apt install -y nginx
+sudo systemctl enable nginx
+sudo systemctl start nginx
+sudo nano /etc/nginx/sites-available/socialmedia
+```
+Le contenu de socialmedia est dans le fichier `nginx.conf`
 
 11. Activer la configuration Nginx
 ```bash
@@ -85,11 +97,14 @@ sudo systemctl restart nginx
 ```
 
 ## Commandes utiles
-- `journalctl -u springapp -f` # Pour suivre les logs spring boot en direct
-- `sudo systemctl restart springapp` # Redémarrer l’application
-- `sudo nginx -t` # Vérifier la configuration Nginx
-- `sudo tail -f /var/log/nginx/access.log` # Suivre les logs Nginx 
-- `sudo tail -f /var/log/nginx/error.log` # Suivre les logs d'erreur Nginx
+```bash
+journalctl -u springapp -f # Pour suivre les logs spring boot en direct
+sudo systemctl restart springapp # Redémarrer l’application
+sudo nginx -t # Vérifier la configuration Nginx
+# Suivre les logs Nginx
+sudo tail -f /var/log/nginx/access.log  
+sudo tail -f /var/log/nginx/error.log
+```
 
 ## N'oubliez pas de remplacer les valeurs des différents des variables de conf des différents fichier par leurs valeurs respectifs
 ![img.png](img.png)
