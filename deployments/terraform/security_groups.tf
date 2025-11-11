@@ -66,7 +66,7 @@ resource "aws_security_group" "social_media_ec2_bastion_SG" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["89.86.73.185/32"]  # chomp enlève le retour à la ligne
+    cidr_blocks = ["80.215.205.26/32"]  # chomp enlève le retour à la ligne
   }
 
   # Outbound rules
