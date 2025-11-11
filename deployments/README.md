@@ -42,7 +42,7 @@ cd ..
 3. Configurer la connexion à la BDD
    - Créer le dossier pour les fichiers de configuration : 
 ```bash  
-sudo mkdir -p /etc/springapp` 
+sudo mkdir -p /etc/springapp 
 ```
    - Créer le fichier d'environnement pour les secrets (springapp.env) :
 ```bash

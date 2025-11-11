@@ -47,7 +47,7 @@ resource "aws_iam_role" "github_role" {
     {
       "Effect": "Allow"
       "Principal": {
-        "Federated": "arn:aws:iam::${var.account_id}:oidc-provider/token.actions.githubusercontent.com"
+        "Federated": aws_iam_openid_connect_provider.sm_iam_openid_connect_for_github.arn
       },
       "Action": "sts:AssumeRoleWithWebIdentity", # GitHub assume le rôle via OIDC
       "Condition": {
@@ -99,4 +99,12 @@ resource "aws_iam_policy" "sm_github_iam_policy" {
 resource "aws_iam_role_policy_attachment" "sm_github_policy_attachment" {
   role       = aws_iam_role.github_role.name
   policy_arn = aws_iam_policy.sm_github_iam_policy.arn
+}
+
+resource "aws_iam_openid_connect_provider" "sm_iam_openid_connect_for_github" {
+  url = "https://token.actions.githubusercontent.com"
+
+  client_id_list = ["sts.amazonaws.com"]
+
+  thumbprint_list = ["6938fd4d98bab03faadb97b34396831e3780aea1"]
 }
