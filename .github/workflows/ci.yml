@@ -50,6 +50,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: app-jar
+          path: target
 
       - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@v3
