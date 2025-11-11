@@ -60,6 +60,6 @@ jobs:
 
       - name: Upload JAR to S3
         run: |
-          JAR_FILE=$(ls *.jar)
+          JAR_FILE=$(ls target/*.jar)
           aws s3 cp target/*.jar s3://${{ env.BUCKET_NAME }}/app-$(date +%Y%m%d%H%M).jar
           aws s3 cp target/*.jar s3://${{ env.BUCKET_NAME }}/app-latest.jar
