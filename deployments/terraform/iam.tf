@@ -53,7 +53,7 @@ resource "aws_iam_role" "github_role" {
       "Condition": {
         "StringEquals": {
           "token.actions.githubusercontent.com:aud": "sts.amazonaws.com", 
-          "token.actions.githubusercontent.com:sub": "repo:Sougoumay/social-media:ref:refs/heads/main"
+          "token.actions.githubusercontent.com:sub": "repo:Sougoumay/social_media:ref:refs/heads/main"
           # Restreint le rôle à une repo et branche spécifiques
         }
       }
