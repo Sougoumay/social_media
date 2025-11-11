@@ -69,23 +69,41 @@ resource "aws_iam_role" "github_role" {
 # Policy attachée au rôle GitHub
 resource "aws_iam_policy" "sm_github_iam_policy" {
   name        = "Social-media-github-IAM-policy"
-  description = "Policy pour GitHub pousser le jar et exécuter SSM"
+  description = "Policy pour GitHub pousser le jar dans S3 et envoyer un deploy via SSM"
 
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
+      # Accès au Bucket S3
       {
+        Effect = "Allow"
         Action = [
-          "s3:PutObject",           # Autorise GitHub à pousser le jar
-          "ssm:SendCommand"         # Autorise GitHub à exécuter des commandes SSM sur EC2
+          "s3:PutObject",
+          "s3:GetObject",
+          "s3:ListBucket"
         ]
-        Effect   = "Allow"
         Resource = [
-          "arn:aws:s3:::sm_jar_bucket/*",                               # Bucket cible
-          "arn:aws:ec2:${var.region}:${var.account_id}:instance/${aws_instance.social_media_ec2.id}" 
-          # Limité à l'instance EC2 spécifique
+          "arn:aws:s3:::sm_jar_bucket",
+          "arn:aws:s3:::sm_jar_bucket/*"
         ]
       },
+
+      # Autoriser SendCommand via document AWS-RunShellScript
+      {
+        Effect = "Allow"
+        Action = ["ssm:SendCommand"]
+        Resource = "*"
+      },
+
+
+      # Autoriser la découverte d’instances (nécessaire pour SSM)
+      {
+        Effect = "Allow"
+        Action = [
+          "ec2:DescribeInstances"
+        ]
+        Resource = "*"
+      }
     ]
   })
 
@@ -94,6 +112,7 @@ resource "aws_iam_policy" "sm_github_iam_policy" {
     Project = "social-media"
   }
 }
+
 
 # Attachement de la policy au rôle GitHub
 resource "aws_iam_role_policy_attachment" "sm_github_policy_attachment" {
@@ -108,3 +127,4 @@ resource "aws_iam_openid_connect_provider" "sm_iam_openid_connect_for_github" {
 
   thumbprint_list = ["6938fd4d98bab03faadb97b34396831e3780aea1"]
 }
+

@@ -95,7 +95,11 @@ sudo ln -s /etc/nginx/sites-available/socialmedia /etc/nginx/sites-enabled/
 sudo nginx -t
 sudo systemctl restart nginx
 ```
-
+12. Ajouter le script de deploiement automatiquement lors des nouveaux commit et le rendre executable
+```bash
+sudo nano /opt/springapp/deploy.sh
+sudo chmod +x /opt/springapp/deploy.sh
+```
 ## Commandes utiles
 ```bash
 journalctl -u springapp -f # Pour suivre les logs spring boot en direct
