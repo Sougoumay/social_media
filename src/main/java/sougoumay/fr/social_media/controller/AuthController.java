@@ -2,6 +2,8 @@ package sougoumay.fr.social_media.controller;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -14,6 +16,7 @@ import sougoumay.fr.social_media.service.UserService;
 public class AuthController {
 
     private final UserService userService;
+    private final static Logger log = LoggerFactory.getLogger(AuthController.class);
 
     public AuthController(UserService userService) {
         this.userService = userService;
@@ -21,16 +24,21 @@ public class AuthController {
 
     @GetMapping("/")
     public String index() {
+        log.info("GET / : default endpoint called");  // Important : tracer la requête
+        log.debug("Redirecting user to the login page"); // DEBUG : utile en dev
         return "redirect:/login";
     }
 
     @GetMapping("/login")
     public String loginPage() {
+        log.info("GET /login");
         return "login-view";
     }
 
     @GetMapping("/register")
     public String registerPage(Model model) {
+        log.info("GET /register - display registration page");
+
         model.addAttribute("user", new RegisterForm());
         return "register-view";
     }
@@ -38,14 +46,22 @@ public class AuthController {
     @PostMapping("/register")
     public String register(@Valid @ModelAttribute("user") RegisterForm form,
                            BindingResult result, Model model) {
+        log.info("POST /register - registration attempt for username={}", form.getUsername());
+
         if (result.hasErrors()) {
+            log.info("POST /register - validation failed for username={}", form.getUsername());
             return "register-view";
         }
 
         try {
             userService.registerUser(form.getUsername(), form.getEmail(), form.getPassword());
+
+            log.info("POST /register - registration succeeded for username={}", form.getUsername());
             return "redirect:/login?registered";
         } catch (Exception e) {
+            log.warn("POST /register - registration failed for username={}, reason={}",
+                    form.getUsername(), e.getMessage());
+
             model.addAttribute("error", e.getMessage());
             return "register-view";
         }
