@@ -58,3 +58,36 @@
 | Erreurs        | **ERROR** |
 
 
+# 5- Configuration des logs
+
+## 1- Limite des logs en text : 
+- Format : 12:45:10.123 INFO  c.s.user.UserService - Profile update successful for user 'ali'
+- lisible pour un humain, mais
+  - difficile à parser automatiquement
+  - fragile (si le format change, les outils cassent)
+  - compliqué pour faire des recherches avancées 
+    - tous les logs d’un utilisateur
+    - toutes les erreurs d’un service
+    - corrélation entre microservices
+
+## 2- Avantages des Logs JSON (logs structurés)
+### Format
+```json
+{
+  "timestamp": "2025-12-21T12:45:10.123",
+  "level": "INFO",
+  "service": "social_media",
+  "logger": "c.s.user.UserService",
+  "message": "Profile update successful",
+  "username": "ali",
+  "thread": "http-nio-8080-exec-1"
+}
+```
+### Avantages
+- Parfait pour le monitoring 
+  - ELK (Elasticsearch + Logstash + Kibana)
+  - Grafana + Loki 
+  - CloudWatch ...
+- Standard industriel 
+  - En prod, quasi tous les systèmes sérieux utilisent des logs JSON
+
