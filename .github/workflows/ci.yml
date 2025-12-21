@@ -42,54 +42,54 @@ jobs:
           name: app-jar
           path: target/*.jar
 
-  upload:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Download Built JAR
-        uses: actions/download-artifact@v4
-        with:
-          name: app-jar
-          path: target
-
-      - name: configure aws credentials
-        uses: aws-actions/configure-aws-credentials@v3
-        with:
-          role-to-assume: arn:aws:iam::620267421546:role/Github-IAM-Role
-          role-session-name: samplerolesession
-          aws-region: ${{ env.AWS_REGION }}
-
-      - name: Upload JAR to S3
-        run: |
-          JAR_FILE=$(ls target/*.jar)
-          aws s3 cp target/*.jar s3://${{ env.BUCKET_NAME }}/app-$(date +%Y%m%d%H%M).jar
-          aws s3 cp target/*.jar s3://${{ env.BUCKET_NAME }}/app-latest.jar
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: upload
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: configure aws credentials
-        uses: aws-actions/configure-aws-credentials@v3
-        with:
-          role-to-assume: arn:aws:iam::620267421546:role/Github-IAM-Role
-          role-session-name: samplerolesession
-          aws-region: ${{ env.AWS_REGION }}
-
-      - name: Send command to EC2 to update app
-        run: |
-          INSTANCE_ID=$(aws ec2 describe-instances \
-            --region "us-east-1" \
-            --filters "Name=tag:Name,Values=ec2-instance" \
-            --query "Reservations[0].Instances[0].InstanceId" \
-            --output text)
-
-          aws ssm send-command \
-            --instance-ids "$INSTANCE_ID" \
-            --document-name "AWS-RunShellScript" \
-            --comment "Deploy new JAR" \
-            --parameters commands="sudo /opt/springapp/deploy.sh" \
-            --output text
+#  upload:
+#    runs-on: ubuntu-latest
+#    needs: build
+#    steps:
+#      - name: Download Built JAR
+#        uses: actions/download-artifact@v4
+#        with:
+#          name: app-jar
+#          path: target
+#
+#      - name: configure aws credentials
+#        uses: aws-actions/configure-aws-credentials@v3
+#        with:
+#          role-to-assume: arn:aws:iam::620267421546:role/Github-IAM-Role
+#          role-session-name: samplerolesession
+#          aws-region: ${{ env.AWS_REGION }}
+#
+#      - name: Upload JAR to S3
+#        run: |
+#          JAR_FILE=$(ls target/*.jar)
+#          aws s3 cp target/*.jar s3://${{ env.BUCKET_NAME }}/app-$(date +%Y%m%d%H%M).jar
+#          aws s3 cp target/*.jar s3://${{ env.BUCKET_NAME }}/app-latest.jar
+#
+#  deploy:
+#    runs-on: ubuntu-latest
+#    needs: upload
+#    steps:
+#      - name: Checkout repository
+#        uses: actions/checkout@v4
+#
+#      - name: configure aws credentials
+#        uses: aws-actions/configure-aws-credentials@v3
+#        with:
+#          role-to-assume: arn:aws:iam::620267421546:role/Github-IAM-Role
+#          role-session-name: samplerolesession
+#          aws-region: ${{ env.AWS_REGION }}
+#
+#      - name: Send command to EC2 to update app
+#        run: |
+#          INSTANCE_ID=$(aws ec2 describe-instances \
+#            --region "us-east-1" \
+#            --filters "Name=tag:Name,Values=ec2-instance" \
+#            --query "Reservations[0].Instances[0].InstanceId" \
+#            --output text)
+#
+#          aws ssm send-command \
+#            --instance-ids "$INSTANCE_ID" \
+#            --document-name "AWS-RunShellScript" \
+#            --comment "Deploy new JAR" \
+#            --parameters commands="sudo /opt/springapp/deploy.sh" \
+#            --output text
