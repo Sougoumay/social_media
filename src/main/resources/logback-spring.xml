@@ -1,8 +1,5 @@
 <configuration scan="true">
-    <!-- Config par défaut utilisée si aucun profil ne matche -->
-<!--    <root level="info">-->
-<!--        <appender-ref ref="Console" />-->
-<!--    </root>-->
+
     <springProperty name="LOG_PATH" source="logging.file.path"/>
 
     <!-- ========== APPENDERS ========== -->
@@ -10,6 +7,12 @@
     <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="ConsoleJson" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <customFields>{"service":"social_media"}</customFields>
         </encoder>
     </appender>
 
@@ -26,22 +29,7 @@
         </rollingPolicy>
     </appender>
 
-    <appender name="JsonFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_PATH}/spring-boot-logger.json</file>
-
-        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
-            <customFields>
-                {"service":"social_media"}
-            </customFields>
-        </encoder>
-
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_PATH}/archived/spring-boot-logger-%d{yyyy-MM-dd}.json</fileNamePattern>
-            <maxFileSize>10MB</maxFileSize>
-            <maxHistory>14</maxHistory>
-            <cleanHistoryOnStart>true</cleanHistoryOnStart>
-        </rollingPolicy>
-    </appender>
+    <!-- ========== PROFILE ========== -->
 
      <springProfile name="h2">
         <root level="debug">
@@ -57,13 +45,13 @@
 
     <springProfile name="production">
         <root level="info">
-            <appender-ref ref="JsonFile" />
+            <appender-ref ref="ConsoleJson" />
         </root>
     </springProfile>
 
-    <springProfile name="debug">
+    <springProfile name="docker">
         <root level="info">
-            <appender-ref ref="RollingFile" />
+            <appender-ref ref="ConsoleJson" />
         </root>
     </springProfile>
 
