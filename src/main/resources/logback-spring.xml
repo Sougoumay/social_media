@@ -43,7 +43,7 @@
         </root>
     </springProfile>
 
-    <springProfile name="production">
+    <springProfile name="prod">
         <root level="info">
             <appender-ref ref="ConsoleJson" />
         </root>

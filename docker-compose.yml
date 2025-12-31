@@ -12,9 +12,11 @@ services:
       - DB_USER=${MYSQL_USER}
       - DB_PASSWORD=${MYSQL_PASSWORD}
       - DB_NAME=${MYSQL_DATABASE}
-      - SPRING_PROFILE_ACTIVE=docker
+      - SPRING_PROFILES_ACTIVE=docker
     depends_on:
       - db
+    networks:
+      - social_media
 
   db:
     image: mysql:8.0
@@ -35,7 +37,8 @@ services:
       timeout: 5s
     volumes:
       - db-data:/var/lib/mysql
-
+    networks:
+      - social_media
 volumes:
   db-data:
 
