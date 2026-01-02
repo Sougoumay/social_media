@@ -43,6 +43,12 @@
         </root>
     </springProfile>
 
+    <springProfile name="test">
+        <root level="info">
+            <appender-ref ref="ConsoleJson" />
+        </root>
+    </springProfile>
+
     <springProfile name="prod">
         <root level="info">
             <appender-ref ref="ConsoleJson" />

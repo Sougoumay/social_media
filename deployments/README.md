@@ -30,6 +30,23 @@ ssh -i <bastion-key.pem> -J ubuntu@<Bastion-IP> ubuntu@<Private-EC2-IP>
 ```bash   
 sudo apt update && sudo apt upgrade -y
 sudo apt install -y git unzip curl awscli openjdk-17-jdk nginx
+# Aller dans /tmp
+cd /tmp
+
+# Télécharger le package officiel
+wget https://s3.amazonaws.com/amazoncloudwatch-agent/ubuntu/amd64/latest/amazon-cloudwatch-agent.deb
+
+# Installer le package
+sudo dpkg -i amazon-cloudwatch-agent.deb
+
+sudo touch /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
+
+sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
+  -a fetch-config -m ec2 \
+  -c file:/opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json \
+  -s
+
+amazon-cloudwatch-agent-ctl -a status
 ```
 3. Cloner le projet et génerer le jar de l'application
 ```bash

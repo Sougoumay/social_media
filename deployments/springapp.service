@@ -6,7 +6,9 @@ After=network.target
 User=ubuntu
 WorkingDirectory=/opt/springapp
 EnvironmentFile=/etc/springapp/springapp.env
-ExecStart=/usr/bin/java -jar /opt/springapp/app.jar
+ExecStart=/usr/bin/java -jar /opt/springapp/app.jar --spring.profiles.active=test
+StandardOutput=journal
+StandardError=journal
 SuccessExitStatus=143
 Restart=always
 RestartSec=10
