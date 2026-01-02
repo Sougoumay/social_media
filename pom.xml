@@ -143,6 +143,12 @@
             </properties>
         </profile>
         <profile>
+            <id>test</id>
+            <properties>
+                <spring-boot.run.profiles>test</spring-boot.run.profiles>
+            </properties>
+        </profile>
+        <profile>
             <id>docker</id>
             <properties>
                 <spring-boot.run.profiles>docker</spring-boot.run.profiles>
