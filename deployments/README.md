@@ -1,69 +1,138 @@
-# Déploiement Spring MVC sur EC2 + ALB +RDS
+# Déploiement Spring MVC sur AWS (EC2 + ALB + RDS + S3 + Bastion)
+
+Ce guide décrit le déploiement de l'application sur une infrastructure AWS sécurisée, avec les composants suivants :
+
+- EC2 dans un VPC privé, accessible via un bastion
+- ALB pour le routage et la scalabilité horizontale
+- RDS (MySQL) pour la base de données
+- S3 pour stocker les JAR de l'application
+- Nginx comme reverse proxy devant Spring Boot (dans l'EC2)
 
 ## Prérequis
-- EC2 Ubuntu + SG (22, 80 ouverts)
-- ALB pour avoir un seul point d'entrée en cas de scalabilité horizontal
-- RDS (MySQL) + SG autorisant l’EC2
-- Endpoint, user, password RDS
+- Avoir un compte AWS, créer toutes les ressources défini dans le dossier terraform en appliqunt les commandes suivantes en se déplacant dans le dossier terraform
+```bash
+terraform init
+terraform plan
+terraform apply
+```
+- Bastion configuré pour accéder aux EC2 privées (SSH uniquement via bastion)
+- EC2 Ubuntu dans le VPC privé avec SG autorisant uniquement le Bastion pour SSH
+- ALB configuré dans le VPC, pointant vers les EC2 (ports 80/443) en passant par le proxy Nginx
+- RDS MySQL dnas le VPC, avec endpoint, utilisateur et mot de passe
+- Bucket S3 contenant le JAR de l’application (envoyé depuis GitHub)
 
-## Étapes
-1. Mise à jour & outils de base
-   `sudo apt update && sudo apt upgrade -y`
-   `sudo apt install -y git unzip curl`
-2. Cloner le repo :
-   git clone https://github.com/Sougoumay/social_media
-   `cd social_media`
-3. Installer OpenJDK 17
-   `sudo apt install -y openjdk-17-jdk`
-   `java -version`
-4. Configurer la connexion DB (profil prod)
-- Créer le profil prod
-  `cp src/main/resources/application-docker.yml src/main/resources/application-prod.yml`
-- Créer le fichier d'environnement contenant les informations de la BDD RDS (endpoint, nom de la base de données user, password) - voir l'étape 6
-5. Build
-   `chmod +x mvnw`
-   `./mvnw -DskipTests package`
-6. Créer service systemd (`/opt/springapp/app.jar`, `/etc/springapp/springapp.env`)
-# Fichier d'environnement (pour secrets/params)
-`sudo mkdir -p /etc/springapp`
-`sudo nano /etc/springapp/springapp.env`
-Le contenu de springapp.env est dans le fichier `springapp.env`
+## Étapes de déploiement
+1. Connexion à l'EC2 via Bastion
+```bash
+ssh -i <bastion-key.pem> -J ubuntu@<Bastion-IP> ubuntu@<Private-EC2-IP>
+```
+2. Mise à jour & installation des outils de base
+```bash   
+sudo apt update && sudo apt upgrade -y
+sudo apt install -y git unzip curl openjdk-17-jdk nginx awscli
+```
 
-# Dossier appli + droits
-`sudo mkdir -p /opt/springapp`
-`sudo cp target/*.jar /opt/springapp/app.jar`
-`sudo chown -R ubuntu:ubuntu /opt/springapp`
+3. Installer l'agent cloudwatch
+```bash
+   # Aller dans /tmp
+cd /tmp
 
-`sudo nano /etc/systemd/system/springapp.service`
-Le contenu de springapp.service est dans le fichier`springapp.service`
+# Télécharger le package officiel aws-cloudwatch-agent
+wget https://s3.amazonaws.com/amazoncloudwatch-agent/ubuntu/amd64/latest/amazon-cloudwatch-agent.deb
 
-8. Activer et demarrer le service
-   `sudo systemctl daemon-reload`
-   `sudo systemctl enable springapp`
-   `sudo systemctl start springapp`
-   `sudo systemctl status springapp --no-pager`
+# Installer le package
+sudo dpkg -i amazon-cloudwatch-agent.deb
 
-9. Vérifier accès via `http://<IP-EC2>:8080`
+sudo nano /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
 
+sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
+-a fetch-config -m ec2 \
+-c file:/opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json \
+-s
+
+amazon-cloudwatch-agent-ctl -a status
+```
+4. Cloner le projet et génerer le jar de l'application
+```bash
+sudo git clone https://github.com/Sougoumay/social_media 
+cd social_media
+sudo chmod +x mvnw
+sudo ./mvnw -DskipTests package
+cd ..
+```
+5. Configurer la connexion à la BDD
+   - Créer le dossier pour les fichiers de configuration : 
+```bash  
+sudo mkdir -p /etc/springapp 
+```
+   - Créer le fichier d'environnement pour les secrets (springapp.env) :
+```bash
+sudo touch /etc/springapp/springapp.env
+sudo nano /etc/springapp/springapp.env
+```
+   - Le contenu du fichier springapp.env est dans le fichier (springapp.env qui est à la même arborescence)
+   - Créer le dossier de l'application et les droits Ubuntu pour l'execution de l'appli
+```bash
+sudo mkdir -p /opt/springapp
+sudo cp social_media/target/*.jar /opt/springapp/app.jar
+sudo chown -R ubuntu:ubuntu /opt/springapp
+```
+6. Créer le service systemd
+   - Créer le fichier /etc/systemd/system/springapp.service :
+```bash
+sudo nano /etc/systemd/system/springapp.service
+```
+   - Le contenu du fichier springapp.service est dans le fichier à la même arboresnce et avec le même nom
+7. Activer et démarrer le service
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable springapp
+sudo systemctl start springapp
+sudo systemctl status springapp --no-pager
+```
+8. Configurer Nginx comme reverse proxy 
+```bash
+sudo systemctl enable nginx
+sudo systemctl start nginx
+```
+9. Créer le fichier de configuration - son contenu est dans le fichier nginx.conf qui est à la même arboresence
+```bash
+sudo nano /etc/nginx/sites-available/socialmedia
+```
+   
 10. Installer et configurer Nginx
-    `sudo apt update`
-    `sudo apt install -y nginx`
-    `sudo systemctl enable nginx`
-    `sudo systemctl start nginx`
-    `sudo nano /etc/nginx/sites-available/socialmedia`
-    Le contenu de socialmedia est dans le fichier `nginx.conf`
+```bash
+sudo apt update
+sudo apt install -y nginx
+sudo systemctl enable nginx
+sudo systemctl start nginx
+sudo nano /etc/nginx/sites-available/socialmedia
+```
+Le contenu de socialmedia est dans le fichier `nginx.conf`
 
-11. Activer la configuration
-    `sudo rm /etc/nginx/sites-enabled/default`
-    `sudo ln -s /etc/nginx/sites-available/socialmedia /etc/nginx/sites-enabled/`
-    `sudo nginx -t`
-    `sudo systemctl restart nginx`
-
+11. Activer la configuration Nginx
+```bash
+sudo rm /etc/nginx/sites-enabled/default
+sudo ln -s /etc/nginx/sites-available/socialmedia /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl restart nginx
+```
+12. Ajouter le script de deploiement automatiquement lors des nouveaux commit et le rendre executable
+```bash
+sudo nano /opt/springapp/deploy.sh
+sudo chmod +x /opt/springapp/deploy.sh
+```
 ## Commandes utiles
-- `journalctl -u springapp -f` # Pour suivre les logs en direct
-- `sudo systemctl restart springapp`
-- `sudo nginx -t`
-- `sudo tail -f /var/log/nginx/access.log`
-- `sudo tail -f /var/log/nginx/error.log`
+```bash
+journalctl -u springapp -f # Pour suivre les logs spring boot en direct
+sudo systemctl restart springapp # Redémarrer l’application
+sudo nginx -t # Vérifier la configuration Nginx
+# Suivre les logs Nginx
+sudo tail -f /var/log/nginx/access.log  
+sudo tail -f /var/log/nginx/error.log
+```
 
+## N'oubliez pas de remplacer les valeurs des différents des variables de conf des différents fichier par leurs valeurs respectifs
 ![img.png](img.png)
+
+![img_1.png](img_1.png)

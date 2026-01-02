@@ -1,4 +1,8 @@
 ### Application Load Balancer Security Group ###
+data "http" "myip" {
+  url = "https://ipv4.icanhazip.com"
+}
+
 resource "aws_security_group" "social_media_ALB_SG" {
   name        = "SG for the ALB"
   description = "Allow HTTP/HTTPS traffic from and into internet"
@@ -66,7 +70,7 @@ resource "aws_security_group" "social_media_ec2_bastion_SG" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["89.86.73.185/32"]  # chomp enlève le retour à la ligne
+    cidr_blocks = ["${chomp(data.http.myip.response_body)}/32"]  # chomp enlève le retour à la ligne
   }
 
   # Outbound rules
