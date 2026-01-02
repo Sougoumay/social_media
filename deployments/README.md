@@ -29,41 +29,46 @@ ssh -i <bastion-key.pem> -J ubuntu@<Bastion-IP> ubuntu@<Private-EC2-IP>
 2. Mise à jour & installation des outils de base
 ```bash   
 sudo apt update && sudo apt upgrade -y
-sudo apt install -y git unzip curl awscli openjdk-17-jdk nginx
-# Aller dans /tmp
+sudo apt install -y git unzip curl openjdk-17-jdk nginx awscli
+```
+
+3. Installer l'agent cloudwatch
+```bash
+   # Aller dans /tmp
 cd /tmp
 
-# Télécharger le package officiel
+# Télécharger le package officiel aws-cloudwatch-agent
 wget https://s3.amazonaws.com/amazoncloudwatch-agent/ubuntu/amd64/latest/amazon-cloudwatch-agent.deb
 
 # Installer le package
 sudo dpkg -i amazon-cloudwatch-agent.deb
 
-sudo touch /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
+sudo nano /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
 
 sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \
-  -a fetch-config -m ec2 \
-  -c file:/opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json \
-  -s
+-a fetch-config -m ec2 \
+-c file:/opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json \
+-s
 
 amazon-cloudwatch-agent-ctl -a status
 ```
-3. Cloner le projet et génerer le jar de l'application
+4. Cloner le projet et génerer le jar de l'application
 ```bash
-git clone https://github.com/Sougoumay/social_media 
+sudo git clone https://github.com/Sougoumay/social_media 
 cd social_media
-chmod +x mvnw
-./mvnw -DskipTests package
+sudo chmod +x mvnw
+sudo ./mvnw -DskipTests package
 cd ..
 ```
-3. Configurer la connexion à la BDD
+5. Configurer la connexion à la BDD
    - Créer le dossier pour les fichiers de configuration : 
 ```bash  
 sudo mkdir -p /etc/springapp 
 ```
    - Créer le fichier d'environnement pour les secrets (springapp.env) :
 ```bash
-sudo nano /etc/springapp/springapp.env  
+sudo touch /etc/springapp/springapp.env
+sudo nano /etc/springapp/springapp.env
 ```
    - Le contenu du fichier springapp.env est dans le fichier (springapp.env qui est à la même arborescence)
    - Créer le dossier de l'application et les droits Ubuntu pour l'execution de l'appli
@@ -72,25 +77,25 @@ sudo mkdir -p /opt/springapp
 sudo cp social_media/target/*.jar /opt/springapp/app.jar
 sudo chown -R ubuntu:ubuntu /opt/springapp
 ```
-4. Créer le service systemd
+6. Créer le service systemd
    - Créer le fichier /etc/systemd/system/springapp.service :
 ```bash
 sudo nano /etc/systemd/system/springapp.service
 ```
    - Le contenu du fichier springapp.service est dans le fichier à la même arboresnce et avec le même nom
-6. Activer et démarrer le service
+7. Activer et démarrer le service
 ```bash
 sudo systemctl daemon-reload
 sudo systemctl enable springapp
 sudo systemctl start springapp
 sudo systemctl status springapp --no-pager
 ```
-7. Configurer Nginx comme reverse proxy 
+8. Configurer Nginx comme reverse proxy 
 ```bash
 sudo systemctl enable nginx
 sudo systemctl start nginx
 ```
-8. Créer le fichier de configuration - son contenu est dans le fichier nginx.conf qui est à la même arboresence
+9. Créer le fichier de configuration - son contenu est dans le fichier nginx.conf qui est à la même arboresence
 ```bash
 sudo nano /etc/nginx/sites-available/socialmedia
 ```
@@ -129,3 +134,5 @@ sudo tail -f /var/log/nginx/error.log
 
 ## N'oubliez pas de remplacer les valeurs des différents des variables de conf des différents fichier par leurs valeurs respectifs
 ![img.png](img.png)
+
+![img_1.png](img_1.png)
