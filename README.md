@@ -47,4 +47,4 @@ docker-compose up -d
 http://localhost:8080
 ```
 ## Déploiement
-- Lancement de la procédure du déploiement est défini dans le readme du dossier deployments
+- La procédure du déploiement est défini dans le readme du dossier deployments

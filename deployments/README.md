@@ -18,7 +18,7 @@ terraform apply
 - Bastion configuré pour accéder aux EC2 privées (SSH uniquement via bastion)
 - EC2 Ubuntu dans le VPC privé avec SG autorisant uniquement le Bastion pour SSH
 - ALB configuré dans le VPC, pointant vers les EC2 (ports 80/443) en passant par le proxy Nginx
-- RDS MySQL dnas le VPC, avec endpoint, utilisateur et mot de passe
+- RDS MySQL dans le VPC, avec endpoint, utilisateur et mot de passe
 - Bucket S3 contenant le JAR de l’application (envoyé depuis GitHub)
 
 ## Étapes de déploiement
@@ -99,25 +99,16 @@ sudo systemctl start nginx
 ```bash
 sudo nano /etc/nginx/sites-available/socialmedia
 ```
-   
-10. Installer et configurer Nginx
-```bash
-sudo apt update
-sudo apt install -y nginx
-sudo systemctl enable nginx
-sudo systemctl start nginx
-sudo nano /etc/nginx/sites-available/socialmedia
-```
 Le contenu de socialmedia est dans le fichier `nginx.conf`
 
-11. Activer la configuration Nginx
+10. Activer la configuration Nginx
 ```bash
 sudo rm /etc/nginx/sites-enabled/default
 sudo ln -s /etc/nginx/sites-available/socialmedia /etc/nginx/sites-enabled/
 sudo nginx -t
 sudo systemctl restart nginx
 ```
-12. Ajouter le script de deploiement automatiquement lors des nouveaux commit et le rendre executable
+11. Ajouter le script de deploiement automatiquement lors des nouveaux commit et le rendre executable
 ```bash
 sudo nano /opt/springapp/deploy.sh
 sudo chmod +x /opt/springapp/deploy.sh
@@ -136,3 +127,5 @@ sudo tail -f /var/log/nginx/error.log
 ![img.png](img.png)
 
 ![img_1.png](img_1.png)
+
+![img_3.png](img_3.png)
