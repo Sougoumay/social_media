@@ -42,3 +42,7 @@ build/
 **/terraform.tfstate
 **/terraform.tfstate.*
 **/terraform.tfvars
+
+
+### Kubernetes - en cours de developpement pour une nouvelle version ###
+k8s/
